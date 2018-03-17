@@ -44,18 +44,24 @@ $(document).ready(function() {
   function displayIt(Obj) {
     // NOTE why does spot & gifImg not need a var to define it?
     for (i = 0; i < limit; i++) {
-      spot = $('<div>');
-      gifImg = $('<img>').addClass('gif');
-      gifImg.attr('src', Obj.data[i].images.original_still.url);
-      spot.append(gifImg);
-      $('#gifs').prepend(spot);
+      // spot = $('<div>');
+      // gifImg = $('<img>').addClass('gif');
+      // gifImg.attr('src', Obj.data[i].images.original_still.url);
+      // spot.append(gifImg);
+      // $('#gifs').prepend(spot);
+
+      $('#gifs').prepend(`
+          <div>
+            <img class='gif'>${Obj.data[i].images.original_still.url}
+          </div>
+      `)
     }
   }
 
   setPresets();
 
   $('#findIt').click(function() {
-    var searchTerm = $('input').val();
+    var searchTerm = $('input').val().trim();
     presets.push(searchTerm);
     $('input').val('');
     $('#presetBtns').empty();
