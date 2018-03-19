@@ -2,7 +2,6 @@ $(document).ready(function() {
 
   var key = 'UpiMHAYksgBgbzIs6JAfkehdMNg1vtdu';
   var limit = 10;
-  var state = 'still';
   var presets = ['kaleidoscope', 'kite', 'blue', 'random'];
 
   function setPresets() {
@@ -36,17 +35,24 @@ $(document).ready(function() {
     }).then(function(response) {
       console.log('url: ', url);
       console.log('this is the response Obj: ', response);
-      displayIt(response);
+      displayIt(response.data);
       // animate(response);
     })
   }
 
-  function displayIt(Obj) {
+  function displayIt(gifs) {
     // NOTE why does spot & gifImg not need a var to define it?
     for (i = 0; i < limit; i++) {
+      var stillUrl = gifs[i].images.original_still.url;
+      var animatedUrl = gifs[i].images.original.url;
       spot = $('<div>');
       gifImg = $('<img>').addClass('gif');
-      gifImg.attr('src', Obj.data[i].images.original_still.url);
+      gifImg.attr({
+        src: stillUrl,
+        'data-state': 'still',
+        'data-still': stillUrl,
+        'data-animate': animatedUrl,
+      });
       spot.append(gifImg);
       $('#gifs').prepend(spot);
     }
@@ -69,20 +75,28 @@ $(document).ready(function() {
     }
   });
 
-  $(document).on('click', '.gif', {
-    src: 'Obj.data[i].images.original.url'
-  }, animate);
+  $(document).on('click', '.gif', animate);
 
-  function animate(src) {
+  function animate() {
+
+    console.log('this', this);
+    var state = $(this).attr('data-state');
+
     if (state === 'still') {
-    console.log('what is the clicked element??? ', src);
-      $(this).attr('src', $(this).attr('Obj.data[i].images.original.url'))
+      //console.log('what is the clicked element??? ', src);
+      var animatedUrl = $(this).attr('data-animate');
+      $(this).attr({
+        src: animatedUrl,
+        'data-state': 'animated'
+      });
       // event.target.src = 'Obj.data[i].images.original.url';
-      state = 'animate';
     } else {
-      $(this).attr('src', $(this).attr('Obj.data[i].images.original_still.url'))
+      var stillUrl = $(this).attr('data-still');
+      $(this).attr({
+        src: stillUrl,
+        'data-state': 'still'
+      });
       // response.src = 'Obj.data[i].images.original_still.url';
-      state = 'still';
     }
   }
 
