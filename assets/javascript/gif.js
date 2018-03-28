@@ -6,7 +6,7 @@ $(document).ready(function() {
 
   function setPresets() {
     for (i = 0; i < presets.length; i++) {
-      var li = $('<li>');
+      var li = $('<div>');
       var btn = $('<button/>');
       btn.addClass('preset');
       btn.text(presets[i]).data('name', presets[i]);
@@ -28,7 +28,7 @@ $(document).ready(function() {
   }
 
   function getGif(name) {
-    let url = 'http://api.giphy.com/v1/gifs/search?q=' + name + '&api_key=' + key + '&limit=' + limit;
+    let url = 'https://api.giphy.com/v1/gifs/search?q=' + name + '&api_key=' + key + '&limit=' + limit;
     $.ajax({
       url: url,
       method: "GET"
@@ -36,19 +36,17 @@ $(document).ready(function() {
       console.log('url: ', url);
       console.log('this is the response Obj: ', response);
       displayIt(response.data);
-      // animate(response);
     })
   }
 
   function displayIt(gifs) {
-    // NOTE why does spot & gifImg not need a var to define it?
     for (i = 0; i < limit; i++) {
       var stillUrl = gifs[i].images.original_still.url;
       var animatedUrl = gifs[i].images.original.url;
       spot = $('<div>');
       gifImg = $('<img>').addClass('gif');
       gifImg.attr({
-        src: stillUrl,
+        'src': stillUrl,
         'data-state': 'still',
         'data-still': stillUrl,
         'data-animate': animatedUrl,
@@ -78,26 +76,26 @@ $(document).ready(function() {
   $(document).on('click', '.gif', animate);
 
   function animate() {
-
     console.log('this', this);
     var state = $(this).attr('data-state');
-
     if (state === 'still') {
-      //console.log('what is the clicked element??? ', src);
       var animatedUrl = $(this).attr('data-animate');
       $(this).attr({
         src: animatedUrl,
         'data-state': 'animated'
       });
-      // event.target.src = 'Obj.data[i].images.original.url';
     } else {
       var stillUrl = $(this).attr('data-still');
       $(this).attr({
         src: stillUrl,
         'data-state': 'still'
       });
-      // response.src = 'Obj.data[i].images.original_still.url';
     }
   }
+
+  $('#findIt').click(function() {
+    $(window).scrollTop(0);
+  })
+
 
 });
